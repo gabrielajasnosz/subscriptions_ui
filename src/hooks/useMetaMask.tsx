@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
 import { BlockchainService } from "../ethereum/BlockchainService";
-import {BigNumber} from "ethers";
+import { BigNumber } from "ethers";
 
 declare global {
   interface Window {
@@ -33,7 +33,7 @@ interface MetaMaskContextData {
   isUserContractOwner: boolean;
   isInfoLoaded: boolean;
   isSubscriber: boolean;
-  subscriptionFee: BigNumber | null
+  subscriptionFee: BigNumber | null;
 }
 
 const disconnectedState: WalletState = {
@@ -54,7 +54,9 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
   const [isUserContractOwner, setIsUserContractOwner] = useState(false);
   const [isInfoLoaded, setInfoLoaded] = useState(false);
   const [isSubscriber, setIsSubscriber] = useState(false);
-  const [subscriptionFee, setSubscriptionFee] = useState<BigNumber | null>(null);
+  const [subscriptionFee, setSubscriptionFee] = useState<BigNumber | null>(
+    null,
+  );
 
   const clearError = () => setErrorMessage("");
 
@@ -134,18 +136,25 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
       })
       .catch((e) => console.log(e));
 
-    const isSubscriber = service.isSubscriber()
-        .then((r) => {
-          setIsSubscriber(r)
-        }).catch((e) => console.log(e));
+    const isSubscriber = service
+      .isSubscriber()
+      .then((r) => {
+        setIsSubscriber(r);
+      })
+      .catch((e) => console.log(e));
 
-    const subscriberFee = service.getSubscriberFee().then((r) => {
-      setSubscriptionFee(r);
-    }).catch((e) => console.log(e));
+    const subscriberFee = service
+      .getSubscriberFee()
+      .then((r) => {
+        setSubscriptionFee(r);
+      })
+      .catch((e) => console.log(e));
 
-    Promise.allSettled([isContractOwner, isSubscriber, subscriberFee]).finally(() => {
-      setInfoLoaded(true);
-    });
+    Promise.allSettled([isContractOwner, isSubscriber, subscriberFee]).finally(
+      () => {
+        setInfoLoaded(true);
+      },
+    );
   };
 
   const connectMetaMask = async () => {
@@ -176,7 +185,7 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
         isUserContractOwner,
         isInfoLoaded,
         isSubscriber,
-        subscriptionFee
+        subscriptionFee,
       }}
     >
       {children}

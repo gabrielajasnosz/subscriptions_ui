@@ -1,5 +1,5 @@
-import React, { Dispatch, SetStateAction } from 'react';
-import { Alert, AlertColor, Snackbar } from '@mui/material';
+import React, { Dispatch, SetStateAction } from "react";
+import { Alert, AlertColor, Snackbar } from "@mui/material";
 
 export type SnackbarType = {
   opened: boolean;
@@ -18,16 +18,16 @@ export const CustomSnackbar = ({
 }: SnackbarProps) => {
   return (
     <Snackbar
-      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      anchorOrigin={{ vertical: "top", horizontal: "center" }}
       open={snackbarValues.opened}
       onClose={() => setSnackbarValues({ ...snackbarValues, opened: false })}
       autoHideDuration={6000}
-      sx={{ marginTop: '20px' }}
+      sx={{ marginTop: "20px" }}
     >
       <Alert
         onClose={() => setSnackbarValues({ ...snackbarValues, opened: false })}
         severity={snackbarValues.messageType}
-        sx={{ width: '100%' }}
+        sx={{ width: "100%" }}
       >
         {snackbarValues.message}
       </Alert>

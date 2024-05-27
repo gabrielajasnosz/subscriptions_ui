@@ -1,11 +1,11 @@
-import {BigNumber, ethers, utils} from "ethers";
+import { BigNumber, ethers, utils } from "ethers";
 import { contractABI } from "./ContractAbi";
-import {Subscription} from "../components/Subscribe/SubscribeModal";
-import {SubscriptionDetails} from "../components/SubscriptionDetails/SubscriptionDetailsModal";
-import {SubscriberListElement} from "../components/Subscriptions/SubscriptionsModal";
-import {SubscriptionsRepository} from "./SubscriptionsRepository";
+import { Subscription } from "../components/Subscribe/SubscribeModal";
+import { SubscriptionDetails } from "../components/SubscriptionDetails/SubscriptionDetailsModal";
+import { SubscriberListElement } from "../components/Subscriptions/SubscriptionsModal";
+import { SubscriptionsRepository } from "./SubscriptionsRepository";
 
-export const CONTRACT_ADDRESS = "0xd791dCbA2Bed6B3F8ad0707BBeEA72D2131194b8";
+export const CONTRACT_ADDRESS = "0xAb5731d6436eFc3Bf773a842B348BE57529705fA";
 
 export class BlockchainService {
   private readonly provider: ethers.providers.Web3Provider;
@@ -23,19 +23,29 @@ export class BlockchainService {
 
   public async isSubscriber(): Promise<boolean> {
     const signer = await this.provider.getSigner();
-    return await this.getContract(signer).isSubscribedUser(await signer.getAddress());
+    return await this.getContract(signer).isSubscribedUser(
+      await signer.getAddress(),
+    );
   }
 
-
-  public async subscribe(subscription: Subscription, value: BigNumber): Promise<void> {
-    // const subscriptionFee = ethers.utils.parseEther("0.0001");
+  public async subscribe(
+    subscription: Subscription,
+    value: BigNumber,
+  ): Promise<void> {
     const signer = await this.provider.getSigner();
-    return await this.getContract(signer).subscribe(subscription.email!, subscription.name, subscription.surname, { value })
+    return await this.getContract(signer).subscribe(
+      subscription.email!,
+      subscription.name,
+      subscription.surname,
+      { value },
+    );
   }
 
   public async getSubscriberData(): Promise<SubscriptionDetails> {
     const signer = await this.provider.getSigner();
-    return await this.getContract(signer).checkSubscription(await signer.getAddress());
+    return await this.getContract(signer).checkSubscription(
+      await signer.getAddress(),
+    );
   }
 
   public async getSubscriberFee(): Promise<BigNumber> {
@@ -50,7 +60,7 @@ export class BlockchainService {
 
   public async renewSubscription(value: BigNumber): Promise<void> {
     const signer = await this.provider.getSigner();
-    return await this.getContract(signer).makePayment({ value })
+    return await this.getContract(signer).makePayment({ value });
   }
 
   public async updateSubscriptionFee(value: BigNumber): Promise<void> {
