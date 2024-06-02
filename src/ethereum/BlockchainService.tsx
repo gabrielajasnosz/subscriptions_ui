@@ -4,8 +4,9 @@ import { Subscription } from "../components/Subscribe/SubscribeModal";
 import { SubscriptionDetails } from "../components/SubscriptionDetails/SubscriptionDetailsModal";
 import { SubscriberListElement } from "../components/Subscriptions/SubscriptionsModal";
 import { SubscriptionsRepository } from "./SubscriptionsRepository";
+import config from "../utils/config";
 
-export const CONTRACT_ADDRESS = "0xAb5731d6436eFc3Bf773a842B348BE57529705fA";
+// export const CONTRACT_ADDRESS = "0x7eC1e62455eD42053f8de4e45495a722055c3A6d";
 
 export class BlockchainService {
   private readonly provider: ethers.providers.Web3Provider;
@@ -13,7 +14,7 @@ export class BlockchainService {
 
   constructor() {
     this.provider = new ethers.providers.Web3Provider(window.ethereum);
-    this.contractAddress = CONTRACT_ADDRESS;
+    this.contractAddress = config.contractAddress;
   }
 
   public async isOwner(): Promise<boolean> {
@@ -81,7 +82,7 @@ export class BlockchainService {
   private getContract(signer: ethers.Signer) {
     return new ethers.Contract(
       this.contractAddress,
-      contractABI,
+      config.contractAbi,
       this.provider,
     ).connect(signer) as SubscriptionsRepository;
   }

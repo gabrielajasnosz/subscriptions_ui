@@ -8,7 +8,7 @@ let config: {
     contractAbi: []
 };
 
-const initializeConfig = async () => {
+export const initializeConfig = async () => {
     try {
         const [abi, address] = await Promise.all([fetchAbi(), fetchAddress()]);
         config.contractAbi = abi;
@@ -17,7 +17,5 @@ const initializeConfig = async () => {
         console.error('Error initializing config:', error);
     }
 };
-
-initializeConfig();
 
 export default config;

@@ -7,7 +7,7 @@ import {
   CardActions,
   CardContent,
   CardMedia,
-  CircularProgress,
+  CircularProgress, Tooltip,
   Typography,
 } from "@mui/material";
 import AutorenewIcon from "@mui/icons-material/Autorenew";
@@ -63,46 +63,50 @@ export const RenewYourSubscription = () => {
       });
   };
   return (
-    <Card
-      sx={{
-        width: 300,
-        backgroundColor: "#0c2741",
-        padding: "15px 10px",
-        display: "flex",
-        alignItems: "center",
-      }}
-    >
-      <CardActionArea
+      <>
+      <Tooltip title={'Action not available'} placement={'top-end'}>
+        <Card
+            sx={{
+              width: 300,
+              backgroundColor: "#545b62",
+              padding: "15px 10px",
+              display: "flex",
+              alignItems: "center",
+            }}>
+        <CardActionArea
         sx={{
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-        }}
+      }}
+        disabled={true}
         onClick={renewSubscription}
-      >
+        >
         {isLoading ? (
-          <Box sx={{ display: "flex" }}>
-            <CircularProgress />
-          </Box>
+            <Box sx={{ display: "flex" }}>
+              <CircularProgress />
+            </Box>
         ) : (
-          <>
-            <AutorenewIcon sx={{ color: "white", fontSize: "60px" }} />
-            <CardContent>
-              <Typography
-                variant="h6"
-                component="div"
-                sx={{ fontWeight: "bold", color: "white" }}
-              >
-                Renew your subscription
-              </Typography>
-            </CardContent>
-          </>
+            <>
+              <AutorenewIcon sx={{ color: "white", fontSize: "60px" }} />
+              <CardContent>
+                <Typography
+                    variant="h6"
+                    component="div"
+                    sx={{ fontWeight: "bold", color: "white" }}
+                >
+                  Renew your subscription
+                </Typography>
+              </CardContent>
+            </>
         )}
       </CardActionArea>
-      <CustomSnackbar
-        snackbarValues={snackbar}
-        setSnackbarValues={setSnackbar}
-      />
-    </Card>
+      </Card>
+</Tooltip>
+        <CustomSnackbar
+            snackbarValues={snackbar}
+            setSnackbarValues={setSnackbar}
+        />
+      </>
   );
 };

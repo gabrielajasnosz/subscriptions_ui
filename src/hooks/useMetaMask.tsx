@@ -9,6 +9,7 @@ import React, {
 import detectEthereumProvider from "@metamask/detect-provider";
 import { BlockchainService } from "../ethereum/BlockchainService";
 import { BigNumber } from "ethers";
+import {initializeConfig} from "../utils/config";
 
 declare global {
   interface Window {
@@ -66,7 +67,6 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
       (await window.ethereum.request({ method: "eth_accounts" }));
 
     if (!accounts.length) {
-      // If there are no accounts, then the user is disconnected
       setWallet(disconnectedState);
       setInfoLoaded(true);
       return;
@@ -97,7 +97,9 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     if (wallet.accounts.length > 0) {
-      getUserInfo();
+       initializeConfig().then(() => {
+         getUserInfo();
+       });
     }
   }, [wallet]);
   /**
@@ -161,11 +163,21 @@ export const MetaMaskContextProvider = ({ children }: PropsWithChildren) => {
     setIsConnecting(true);
 
     try {
-      const accounts = await window.ethereum.request({
-        method: "eth_requestAccounts",
+      window.dispatchEvent(new Event("eip6963:requestProvider"));
+      let accounts;
+      window.addEventListener("eip6963:announceProvider", async (event) => {
+        //@ts-ignore
+        const providerDetail = event.detail;
+        console.log("Ogłoszony dostawca:", providerDetail);
+        try {
+          accounts = await providerDetail.provider.request({method: 'eth_requestAccounts'});
+          console.log('Połączono z kontem:', accounts[0]);
+          clearError();
+          updateWallet(accounts);
+        } catch (error) {
+          console.error('Błąd podczas połączenia z portfelem:', error);
+        }
       });
-      clearError();
-      updateWallet(accounts);
     } catch (err: any) {
       setErrorMessage(err.message);
     }
