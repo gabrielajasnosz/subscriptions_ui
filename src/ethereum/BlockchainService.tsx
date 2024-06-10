@@ -5,7 +5,7 @@ import { SubscriptionDetails } from "../components/SubscriptionDetails/Subscript
 import { SubscriberListElement } from "../components/Subscriptions/SubscriptionsModal";
 import { SubscriptionsRepository } from "./SubscriptionsRepository";
 
-export const CONTRACT_ADDRESS = "0xAb5731d6436eFc3Bf773a842B348BE57529705fA";
+export const CONTRACT_ADDRESS = "0x86dB01B465B42892a7f01CAF0Aaad8c960Bc0CaF";
 
 export class BlockchainService {
   private readonly provider: ethers.providers.Web3Provider;

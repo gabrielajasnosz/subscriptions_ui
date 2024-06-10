@@ -32,12 +32,12 @@ export interface SubscriptionsRepository extends BaseContract {
   getAllSubscribers(): Promise<
     {
       subscriberAddress: string;
-      subscriptionDue: BigNumber;
-      isSubscribed: boolean;
+      subscriptionStart: BigNumber;
+      subscriptionEnd: BigNumber;
       email: string;
       firstName: string;
       lastName: string;
-      isSubscriptionActive: boolean;
+      subscriptionValidTill: BigNumber
     }[]
   >;
 

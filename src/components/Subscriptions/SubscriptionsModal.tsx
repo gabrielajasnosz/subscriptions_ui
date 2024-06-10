@@ -21,12 +21,12 @@ type SubscriptionsModalType = {
 
 export type SubscriberListElement = {
   subscriberAddress: string;
-  subscriptionDue: BigNumber;
-  isSubscribed: boolean;
+  subscriptionStart: BigNumber;
+  subscriptionEnd: BigNumber;
   email: string;
   firstName: string;
   lastName: string;
-  isSubscriptionActive: boolean;
+  subscriptionValidTill: BigNumber;
 };
 
 const includesQuery = (query: string) => (sub: SubscriberListElement) =>
@@ -38,7 +38,7 @@ export const SubscriptionsModal = ({
   isOpened,
   handleClose,
 }: SubscriptionsModalType) => {
-  const [subscribers, setSubscribers] = useState<SubscriberListElement[] | []>(
+  const [subscribers, setSubscribers] = useState<any[] | []>(
     [],
   );
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -48,12 +48,15 @@ export const SubscriptionsModal = ({
     service
       .getAllSubscribers()
       .then((data) => {
-        console.log(data);
-        setSubscribers(data);
+        // @ts-ignore
+        const filteredArr = Array.from(new Set(data.map(JSON.stringify)), JSON.parse)
+        console.log(filteredArr);
+        setSubscribers(filteredArr);
       })
       .catch((e) => console.log(e));
   }, []);
 
+  // @ts-ignore
   return (
     <Dialog
       onClose={handleClose}
@@ -112,19 +115,19 @@ export const SubscriptionsModal = ({
                   E-mail
                 </TableCell>
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Is subscribed?
+                  Subscription start
                 </TableCell>
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Expiration date
+                  Subscription end
                 </TableCell>
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  Is subscription valid?
+                  Subscription valid till
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {subscribers.filter(includesQuery(searchQuery)).map((sub) => (
-                <TableRow
+                  <TableRow
                   key={sub.subscriberAddress}
                   sx={{
                     "&:last-child td, &:last-child th": { border: 0 },
@@ -136,22 +139,20 @@ export const SubscriptionsModal = ({
                     sx={{ maxWidth: "60px", overflow: "scroll" }}
                   >
                     <Tooltip title={sub.subscriberAddress}>
-                      <span>{sub.subscriberAddress}</span>
+                      <span> {sub[0]}</span>
                     </Tooltip>
                   </TableCell>
-                  <TableCell align="center">{sub.firstName}</TableCell>
-                  <TableCell align="center">{sub.lastName}</TableCell>
-                  <TableCell align="center">{sub.email}</TableCell>
+                  <TableCell align="center">{sub[5]}</TableCell>
+                  <TableCell align="center">{sub[6]}</TableCell>
+                  <TableCell align="center">{sub[4]}</TableCell>
                   <TableCell align="center">
-                    {sub.isSubscribed ? "Yes" : "No"}
+                    { new Date (Number(sub[1].hex) * 1000).toLocaleString()}
                   </TableCell>
                   <TableCell align="center">
-                    {new Date(
-                      Number(sub.subscriptionDue._hex) * 1000,
-                    ).toLocaleString()}
+                    { sub[3].hex !== "0x00" ?  new Date (Number(sub[3].hex) * 1000).toLocaleString() : '-'}
                   </TableCell>
                   <TableCell align="center">
-                    {sub.isSubscriptionActive ? "Yes" : "No"}
+                    { sub[2].hex !== "0x00" ?  new Date (Number(sub[2].hex) * 1000).toLocaleString() : '-'}
                   </TableCell>
                 </TableRow>
               ))}
